@@ -1,0 +1,16 @@
+<h1>ログイン</h1>
+
+<%# spopeオブジェクトに渡した値がinputフィールドのname値のプレフィックス(接頭語)になる %>
+<%# コントローラー側でparams変数のsessionというキーでログインフォームの各情報を取得できる %>
+
+<%= form_with scope: :session, url: login_path do |f| %>
+<div class="form-group">
+    <%= f.label :name, 'ユーザー名' %>
+    <%= f.text_field :name, class: 'form-control' %>
+</div>
+<div class="form-group">
+    <%= f.label :password, 'パスワード' %>
+    <%= f.password_field :password, class: 'form-control' %>
+</div>
+<%= f.submit 'ログイン', class: 'btn btn-primary' %>
+<% end %>

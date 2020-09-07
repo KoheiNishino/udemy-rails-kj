@@ -1,0 +1,54 @@
+# MySQL. Versions 5.0 and up are supported.
+#
+# Install the MySQL driver
+#   gem install mysql2
+#
+# Ensure the MySQL gem is defined in your Gemfile
+#   gem 'mysql2'
+#
+# And be sure to use new-style password hashing:
+#   http://dev.mysql.com/doc/refman/5.7/en/old-client.html
+#
+default: &default # &でエイリアスを設定し、下記でブロックを呼び出す
+  adapter: mysql2 # DBの種類
+  encoding: utf8 # 文字コード
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %> # コネクション数の上限
+  username: <%= ENV.fetch("MYSQL_USERNAME", "root") %> # DBに接続するユーザー名
+  password: <%= ENV.fetch("MYSQL_PASSWORD", "password") %> # DBに接続するユーザーのPW(docker-compose.ymlのMYSQL_ROOT_PASSWORD)
+  host: <%= ENV.fetch("MYSQL_HOST", "db") %> # DBが動作しているホスト名またはIP(docker-compose.ymlのservice名)
+
+development:
+  <<: *default # defaultブロックの挿入(*は参照を意味する)
+  database: app_development # DB名
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default # defaultブロックの挿入(*は参照を意味する)
+  database: app_test # DB名
+
+# As with config/secrets.yml, you never want to store sensitive information,
+# like your database password, in your source code. If your source code is
+# ever seen by anyone, they now have access to your database.
+#
+# Instead, provide the password as a unix environment variable when you boot
+# the app. Read http://guides.rubyonrails.org/configuring.html#configuring-a-database
+# for a full rundown on how to provide these environment variables in a
+# production deployment.
+#
+# On Heroku and other platform providers, you may have a full connection URL
+# available as an environment variable. For example:
+#
+#   DATABASE_URL="mysql2://myuser:mypass@localhost/somedatabase"
+#
+# You can use this database configuration with:
+#
+#   production:
+#     url: <%= ENV['DATABASE_URL'] %>
+#
+production:
+  <<: *default # defaultブロックの挿入(*は参照を意味する)
+  database: <%= ENV['APP_DB_DATABASE'] %> # DB名
+  username: <%= ENV['APP_DB_USERNAME'] %> # DBに接続するユーザー名
+  password: <%= ENV['APP_DB_PASSWORD'] %> # DBに接続するユーザーのPW

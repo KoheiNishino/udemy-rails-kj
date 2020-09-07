@@ -1,0 +1,36 @@
+# docker-compose.ymlのフォーマットのバージョン（最新）
+version: '3'
+services:
+  # Railsコンテナの定義
+  web:
+    # docker-compose.ymlと同じディレクトリにあるDockerfileを元にイメージを作成して使用する
+    build: .
+    # コンテナを起動したときにデフォルトで実行されるコマンド（Railsのwebサーバーを起動）
+    # -b '0.0.0.0'：仮想マシンの全てのネットワークインターフェースにバインディングされるため、仮想環境外部からアクセスできる
+    command: bundle exec rails s -p 3000 -b ${WEB_HOST}
+    # PC上のディレクトリをコンテナの/appディレクトリにマウント（ローカルとコンテナでソースコードが共有される）
+    volumes:
+      - .:/app
+    # 公開するポート番号:コンテナ内部の転送先ポート番号
+    ports:
+      - ${WEB_PORT}:3000
+    # MySQLサーバーを先に起動するように設定
+    depends_on:
+      - db
+    # Railsでpryを使用してデバッグする際に使用
+    tty: true
+    stdin_open: true
+  # MySQLコンテナの定義
+  db:
+    image: mysql:5.7
+    # 下記のvolumesをコンテナ内のディレクトリにマウント
+    volumes:
+      - db-volume:/var/lib/mysql
+    # コンテナ内に設定する環境変数を定義
+    environment:
+      # MySQLのルートユーザーのパスワード
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+# PC上にdb-volumeという名前でボリューム（データ保持領域）が作成される
+volumes:
+  db-volume:
+
