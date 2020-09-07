@@ -2,7 +2,11 @@
 # Ruby2.4.5の実行環境のイメージをベースとする（リポジトリ:タグ）
 FROM ruby:2.4.5
 # コンテナを起動してパッケージをインストールする（Railsの動作に必要）
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && apt-get update && apt-get install -y nodejs --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+    && apt-get update && apt-get install -y \
+    nodejs --no-install-recommends \
+    graphviz \
+    && rm -rf /var/lib/apt/lists/*
 # Ruby on Railsのプロジェクトファイルを作成するためのappディレクトリをコンテナ内に作成する
 RUN mkdir /app
 # 作業ディレクトリを設定
