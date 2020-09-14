@@ -31,7 +31,8 @@ class User < ApplicationRecord
               message: 'は小文字英数字で入力してください'
             }
   validates :password,
-            length: { minimum: 8 }
+            length: { minimum: 8 },
+            on: :create
 
   # Carrierwaveのアップローダーをモデルにマウント
   mount_uploader :profile_photo, ImageUploader
