@@ -28,6 +28,18 @@ class UsersController < ApplicationController
   # マイページ画面の表示
   def me; end
 
+  # ユーザー情報の更新
+  def update
+    
+    if @current_user.update(profile_photo: user_params[:profile_photo])
+      
+    else
+      error = @current_user.errors.full_messages
+    end
+
+    redirect_to mypage_path
+  end
+  
   # 許可するパラメータはprivateメソッドでカプセル化する
   # createとupdateの両方で使いまわすことができる
   private
@@ -36,6 +48,6 @@ class UsersController < ApplicationController
   #  require：POSTで受け取る値のキーを設定
   #  permit：許可するカラム指定
   def user_params
-    params.require(:user).permit(:name, :password, :password_confirmation)
+    params.require(:user).permit(:name, :password, :password_confirmation, :profile_photo)
   end
 end
