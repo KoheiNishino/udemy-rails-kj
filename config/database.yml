@@ -15,11 +15,11 @@ default: &default # &でエイリアスを設定し、下記でブロックを�
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %> # コネクション数の上限
   username: <%= ENV.fetch("MYSQL_USERNAME", "root") %> # DBに接続するユーザー名
   password: <%= ENV.fetch("MYSQL_PASSWORD", "password") %> # DBに接続するユーザーのPW(docker-compose.ymlのMYSQL_ROOT_PASSWORD)
-  host: <%= ENV.fetch("MYSQL_HOST", "db") %> # DBが動作しているホスト名またはIP(docker-compose.ymlのservice名)
 
 development:
   <<: *default # defaultブロックの挿入(*は参照を意味する)
   database: app_development # DB名
+  host: <%= ENV.fetch("MYSQL_HOST", "db") %> # DBが動作しているホスト名またはIP(docker-compose.ymlのservice名)
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -27,6 +27,7 @@ development:
 test:
   <<: *default # defaultブロックの挿入(*は参照を意味する)
   database: app_test # DB名
+  host: <%= ENV.fetch("MYSQL_HOST", "db") %> # DBが動作しているホスト名またはIP(docker-compose.ymlのservice名)
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -49,6 +50,7 @@ test:
 #
 production:
   <<: *default # defaultブロックの挿入(*は参照を意味する)
-  database: <%= ENV['APP_DB_DATABASE'] %> # DB名
-  username: <%= ENV['APP_DB_USERNAME'] %> # DBに接続するユーザー名
-  password: <%= ENV['APP_DB_PASSWORD'] %> # DBに接続するユーザーのPW
+  database: <%= ENV['AWS_RDS_DATABASE'] %> # RDS DBインスタンスのDB名
+  host: <%= ENV['AWS_RDS_HOST'] %> # RDS DBインスタンスのエンドポイント
+  username: <%= ENV['AWS_RDS_USERNAME'] %> # RDS DBインスタンスのユーザー名
+  password: <%= ENV['AWS_RDS_PASSWORD'] %> # RDS DBインスタンスのPW

@@ -40,13 +40,15 @@ gem 'carrierwave'
 gem 'mini_magick'
 gem 'fog-aws'
 
+# 環境変数
+gem 'dotenv-rails'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
   gem 'rails-controller-testing'
   gem 'rails-flog', require: 'flog'
   gem 'rspec-rails', '~> 3.8'
-  gem 'dotenv-rails'
 end
 
 group :development do
