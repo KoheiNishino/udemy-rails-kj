@@ -6,6 +6,7 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
     && apt-get update && apt-get install -y \
     nodejs --no-install-recommends \
     graphviz \
+    imagemagick \
     && rm -rf /var/lib/apt/lists/*
 # Ruby on Railsのプロジェクトファイルを作成するためのappディレクトリをコンテナ内に作成する
 RUN mkdir /app
