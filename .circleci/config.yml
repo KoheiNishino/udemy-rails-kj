@@ -1,0 +1,75 @@
+version: 2.1
+
+orbs:
+  ruby: circleci/ruby@1.1.2
+
+executors:
+  ruby:
+    docker:
+     - image: circleci/ruby:2.4.5
+  ruby_and_mysql:
+     docker:
+      - image: circleci/ruby:2.4.5
+        environment:
+          RAILS_ENV: test
+          MYSQL_HOST: ${MYSQL_HOST}
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_DATABASE: app_test
+          MYSQL_HOST: ${MYSQL_HOST}
+          MYSQL_ROOT_PASSWORD: password
+
+commands:
+  wait_for_db:
+    steps:
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://${MYSQL_HOST}:3306 -timeout 1m
+  db_setup:
+    steps:
+      - run:
+          name: Database setup
+          command: bundle exec rails db:schema:load --trace
+  add_ec2_ssh_key:
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - 4f:80:1c:ba:66:91:34:a2:32:57:a0:d0:9a:d0:5e:6f
+  scan_ec2_ssh_key:
+    steps:
+      - run:
+          name: SSH KeyScan
+          command: ssh-keyscan ${EC2_HOST} >> ~/.ssh/known_hosts
+  deploy_to_prd:
+    steps:
+      - run:
+          name: Deploy to Production
+          command: ssh ${EC2_USER}@${EC2_HOST} 'cd /var/www/rails/udemy-rails-kj && git pull origin master'
+
+jobs:
+  test:
+    parallelism: 3
+    executor: ruby_and_mysql
+    steps:
+      - checkout
+      - ruby/install-deps
+      - wait_for_db
+      - db_setup
+      - ruby/rspec-test
+  deploy:
+    executor: ruby
+    steps:
+      - add_ec2_ssh_key
+      - scan_ec2_ssh_key
+      - deploy_to_prd
+
+workflows:
+  test_and_deploy:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
