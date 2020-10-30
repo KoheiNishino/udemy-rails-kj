@@ -231,6 +231,8 @@ GEM
       rspec-mocks (~> 3.9.0)
       rspec-support (~> 3.9.0)
     rspec-support (3.9.3)
+    rspec_junit_formatter (0.4.1)
+      rspec-core (>= 2, < 4, != 2.12.0)
     ruby-graphviz (1.2.5)
       rexml
     ruby-vips (2.0.17)
@@ -305,6 +307,7 @@ DEPENDENCIES
   rails-flog
   rails-i18n
   rspec-rails (~> 3.8)
+  rspec_junit_formatter
   sass-rails (~> 5.0)
   spring
   spring-watcher-listen (~> 2.0.0)

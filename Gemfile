@@ -49,6 +49,7 @@ group :development, :test do
   gem 'rails-controller-testing'
   gem 'rails-flog', require: 'flog'
   gem 'rspec-rails', '~> 3.8'
+  gem 'rspec_junit_formatter'
 end
 
 group :development do
